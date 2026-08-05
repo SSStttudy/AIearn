@@ -1,0 +1,3 @@
+import {afterEach,describe,expect,it,vi} from "vitest";import {streamMessage} from "./api";
+afterEach(()=>vi.unstubAllGlobals());
+describe("SSE client",()=>{it("parses token and done events",async()=>{const body=new ReadableStream({start(controller){controller.enqueue(new TextEncoder().encode('event: token\ndata: {"text":"你"}\n\nevent: token\ndata: {"text":"好"}\n\nevent: done\ndata: {}\n\n'));controller.close();}});vi.stubGlobal("fetch",vi.fn().mockResolvedValue(new Response(body,{status:200,headers:{"content-type":"text/event-stream"}})));let text="",done=false;await streamMessage("/test","hello",{token:t=>text+=t,done:()=>{done=true},error:()=>{}},new AbortController().signal);expect(text).toBe("你好");expect(done).toBe(true);});});

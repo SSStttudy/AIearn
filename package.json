@@ -1,0 +1,18 @@
+{
+  "name": "ailearn",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "predev": "npm run build -w @ailearn/shared",
+    "dev": "concurrently -n server,web -c cyan,magenta \"npm run dev -w @ailearn/server\" \"npm run dev -w @ailearn/web\"",
+    "build": "npm run build -w @ailearn/shared && npm run build -w @ailearn/server && npm run build -w @ailearn/web",
+    "pretypecheck": "npm run build -w @ailearn/shared",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "pretest": "npm run build -w @ailearn/shared",
+    "test": "npm run test --workspaces --if-present",
+    "db:migrate": "npm run db:migrate -w @ailearn/server"
+  },
+  "devDependencies": {"concurrently": "^9.2.1"},
+  "engines": {"node": ">=20"}
+}
